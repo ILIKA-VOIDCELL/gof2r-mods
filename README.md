@@ -1,12 +1,12 @@
 # GoF2R Mods
 
 The community mod catalog of the [Galaxy on Fire 2 remake](https://github.com/JoppieToppie/Galaxy-on-Fire-2-Unity-Remake).
-The game's **Mods > Mod Browser > Online** tab lists every mod here, with its preview, description, author, views and
+The game's **Mods > Mod Browser > Explore Mods** tab lists every mod here, with its preview, description, author, views and
 downloads, and installs it with one click (updates too).
 
 ## Players
 
-Nothing to do here: open the Online tab in the game. Mods marked **Scripts** run Lua scripts, which the game asks you to
+Nothing to do here: open the Explore Mods tab in the game. Mods marked **Scripts** run Lua scripts, which the game asks you to
 allow when you turn the mod on; only allow scripts from authors you trust.
 
 ## Submitting a mod

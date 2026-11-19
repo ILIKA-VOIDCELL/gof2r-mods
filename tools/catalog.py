@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """gof2r-mods: the community mod catalog of the Galaxy on Fire 2 remake.
 
-The game's Mod Browser (Online tab) reads catalog.json from this repository. A mod is submitted as one small file,
+The game's Mod Browser (Explore Mods tab) reads catalog.json from this repository. A mod is submitted as one small file,
 submissions/<mod id>.json, naming its GitHub owner and either a direct download link of the mod's .zip ("download": an
 update is a pull request changing the link) or the author's own GitHub repository ("github": every new release there with
 the mod's zip is picked up by the hourly publish, no pull request needed). On merge, the publish
@@ -619,7 +619,7 @@ def cmd_publish(args):
                 preview, thumb = images(info["preview"], english(info["name"], mod_id))
                 title = f"{english(info['name'], mod_id)} {info['version']}"
                 notes = (f"**{english(info['name'], mod_id)}** {info['version']} by {info['author'] or sub['owner']}\n\n"
-                         f"{english(info['description'])}\n\nInstall it from the game: Mods > Mod Browser > Online.")
+                         f"{english(info['description'])}\n\nInstall it from the game: Mods > Mod Browser > Explore Mods.")
                 size = os.path.getsize(zp)
                 if not args.dry_run:
                     release(tag, title, notes, [(f"{mod_id}.zip", zp, "application/zip"),
