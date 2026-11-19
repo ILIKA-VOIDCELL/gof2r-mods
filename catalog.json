@@ -1,6 +1,115 @@
 {
  "format": 1,
- "updated": null,
+ "updated": "2026-11-19T04:55:34Z",
  "repository": "JoppieToppie/gof2r-mods",
- "mods": []
+ "mods": [
+  {
+   "id": "exploding_bra",
+   "name": "Exploding Bra",
+   "version": "1.0",
+   "author": "JoppieToppie",
+   "owner": "JoppieToppie",
+   "description": {
+    "en": "A joke secondary weapon from the community: the bra that drifts through the ending's credits, launched spinning at your enemies and going off in fireworks. Sold at Var Hastra and wherever its tech level allows. Uses the game's own bra model (\"gof2:bra\"), so the mod has no 3D file.",
+    "de": "Eine Spaß-Sekundärwaffe aus der Community: der BH, der durch den Abspann treibt, wirbelnd auf Gegner geschossen und als Feuerwerk gezündet. Zu kaufen in Var Hastra und überall, wo ihre Techstufe es erlaubt. Nutzt das Modell des Spiels (\"gof2:bra\"), der Mod hat also keine 3D-Datei."
+   },
+   "credits": "Idea: VulZen, Eight, Citrus, Mike and the Discord.",
+   "website": null,
+   "dependencies": [],
+   "scripts": false,
+   "files": 3,
+   "size": 160988,
+   "sha256": "72407fa6545f86d0fe62b27697fb2daf1663e16e085cada426096335fc508dda",
+   "tag": "exploding_bra-v1.0",
+   "download": "https://github.com/JoppieToppie/gof2r-mods/releases/download/exploding_bra-v1.0/exploding_bra.zip",
+   "preview": "https://github.com/JoppieToppie/gof2r-mods/releases/download/exploding_bra-v1.0/exploding_bra-preview.jpg",
+   "thumb": "https://github.com/JoppieToppie/gof2r-mods/releases/download/exploding_bra-v1.0/exploding_bra-thumb.jpg",
+   "published": "2026-11-19",
+   "updated": "2026-11-19",
+   "views": 0,
+   "downloads": 0,
+   "source": "https://github.com/JoppieToppie/gof2r-mods/releases/download/sources/exploding_bra-source.zip"
+  },
+  {
+   "id": "frontier_systems",
+   "name": "Frontier: Kepler",
+   "version": "1.0",
+   "author": "JoppieToppie",
+   "owner": "JoppieToppie",
+   "description": {
+    "en": "An example mod: the Terran frontier system Kepler beside Eanya, reached by jumpgate from Eanya and Nesla, with two stations: Kepler Prime, a high-tech shipyard world, and the Rho Freeport.",
+    "de": "Ein Beispiel-Mod: das terranische Grenzsystem Kepler neben Eanya, per Sprungtor von Eanya und Nesla aus erreichbar, mit zwei Stationen: Kepler Prime, eine Hightech-Werftwelt, und der Freihafen Rho."
+   },
+   "credits": null,
+   "website": null,
+   "dependencies": [],
+   "scripts": false,
+   "files": 14,
+   "size": 1229887,
+   "sha256": "fb05ffa62cfea346c8f1de58e9134a6603ce827b0b1daca3e23fb977bbbfc8d4",
+   "tag": "frontier_systems-v1.0",
+   "download": "https://github.com/JoppieToppie/gof2r-mods/releases/download/frontier_systems-v1.0/frontier_systems.zip",
+   "preview": "https://github.com/JoppieToppie/gof2r-mods/releases/download/frontier_systems-v1.0/frontier_systems-preview.jpg",
+   "thumb": "https://github.com/JoppieToppie/gof2r-mods/releases/download/frontier_systems-v1.0/frontier_systems-thumb.jpg",
+   "published": "2026-11-19",
+   "updated": "2026-11-19",
+   "views": 0,
+   "downloads": 0,
+   "source": "https://github.com/JoppieToppie/gof2r-mods/releases/download/sources/frontier_systems-source.zip"
+  },
+  {
+   "id": "pirate_bounty",
+   "name": "Pirate Bounty (script example)",
+   "version": "1.0",
+   "author": "JoppieToppie",
+   "owner": "JoppieToppie",
+   "description": {
+    "en": "A small script mod to learn from. Its scripts pay a bounty for every pirate you destroy (more for every ten), keep the count in your save and report it when you dock. Nothing else is changed.",
+    "de": "Ein kleiner Skript-Mod zum Lernen. Seine Skripte zahlen ein Kopfgeld für jeden zerstörten Piraten (mehr für je zehn), merken sich die Zahl im Spielstand und nennen sie beim Andocken. Sonst wird nichts geändert."
+   },
+   "credits": null,
+   "website": null,
+   "dependencies": [],
+   "scripts": true,
+   "files": 4,
+   "size": 2159,
+   "sha256": "8b249967152339012e9368ff72d3dcf4f54293b561e24c8e7291bda45edd955c",
+   "tag": "pirate_bounty-v1.0",
+   "download": "https://github.com/JoppieToppie/gof2r-mods/releases/download/pirate_bounty-v1.0/pirate_bounty.zip",
+   "preview": "https://github.com/JoppieToppie/gof2r-mods/releases/download/pirate_bounty-v1.0/pirate_bounty-preview.jpg",
+   "thumb": "https://github.com/JoppieToppie/gof2r-mods/releases/download/pirate_bounty-v1.0/pirate_bounty-thumb.jpg",
+   "published": "2026-11-19",
+   "updated": "2026-11-19",
+   "views": 0,
+   "downloads": 0,
+   "source": "https://github.com/JoppieToppie/gof2r-mods/releases/download/sources/pirate_bounty-source.zip"
+  },
+  {
+   "id": "plasma_arsenal",
+   "name": "Plasma Arsenal",
+   "version": "1.0",
+   "author": "JoppieToppie",
+   "owner": "JoppieToppie",
+   "description": {
+    "en": "An example mod: the Plasma Lance blaster and the Hornet Swarm missile, sold at Var Hastra and wherever their tech level allows, and a stronger Targe Shield.",
+    "de": "Ein Beispiel-Mod: der Blaster Plasmalanze und die Rakete Hornissenschwarm, zu kaufen in Var Hastra und überall, wo ihre Techstufe es erlaubt, und ein stärkerer Targe-Schild."
+   },
+   "credits": null,
+   "website": null,
+   "dependencies": [],
+   "scripts": false,
+   "files": 8,
+   "size": 165724,
+   "sha256": "7c1fd514f0f9de79b981d5e41ba216a11f21beb0f5129d55bc0ae0f5283ade2d",
+   "tag": "plasma_arsenal-v1.0",
+   "download": "https://github.com/JoppieToppie/gof2r-mods/releases/download/plasma_arsenal-v1.0/plasma_arsenal.zip",
+   "preview": "https://github.com/JoppieToppie/gof2r-mods/releases/download/plasma_arsenal-v1.0/plasma_arsenal-preview.jpg",
+   "thumb": "https://github.com/JoppieToppie/gof2r-mods/releases/download/plasma_arsenal-v1.0/plasma_arsenal-thumb.jpg",
+   "published": "2026-11-19",
+   "updated": "2026-11-19",
+   "views": 0,
+   "downloads": 0,
+   "source": "https://github.com/JoppieToppie/gof2r-mods/releases/download/sources/plasma_arsenal-source.zip"
+  }
+ ]
 }
