@@ -608,10 +608,12 @@ def cmd_publish(args):
                 why = check_update(old, info, sha)
                 if why:
                     raise ModError(why)
-                if old and old["sha256"] == sha:   # the same files from a new link
-                    old["source"], old["owner"] = url, sub["owner"]
-                    changed = True
-                    lines.append(f"- `{mod_id}`: same files, link updated")
+                if old and old["sha256"] == sha:   # the same files (a new link, or a forced run): no new release
+                    if (old.get("source"), old.get("owner")) != (url, sub["owner"]):
+                        old["source"], old["owner"] = url, sub["owner"]
+                        changed = True
+                        lines.append(f"- `{mod_id}`: same files, link updated")
+                    rejected.pop(mod_id, None)
                     continue
                 tag = tag_of(mod_id, info["version"])
                 preview, thumb = images(info["preview"], english(info["name"], mod_id))
