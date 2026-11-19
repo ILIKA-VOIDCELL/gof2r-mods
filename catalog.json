@@ -1,6 +1,6 @@
 {
  "format": 1,
- "updated": "2026-11-19T04:55:34Z",
+ "updated": "2026-11-19T05:12:52Z",
  "repository": "JoppieToppie/gof2r-mods",
  "mods": [
   {
@@ -26,8 +26,8 @@
    "thumb": "https://github.com/JoppieToppie/gof2r-mods/releases/download/exploding_bra-v1.0/exploding_bra-thumb.jpg",
    "published": "2026-11-19",
    "updated": "2026-11-19",
-   "views": 0,
-   "downloads": 0,
+   "views": 3,
+   "downloads": 1,
    "source": "https://github.com/JoppieToppie/gof2r-mods/releases/download/sources/exploding_bra-source.zip"
   },
   {
@@ -53,8 +53,8 @@
    "thumb": "https://github.com/JoppieToppie/gof2r-mods/releases/download/frontier_systems-v1.0/frontier_systems-thumb.jpg",
    "published": "2026-11-19",
    "updated": "2026-11-19",
-   "views": 0,
-   "downloads": 0,
+   "views": 1,
+   "downloads": 1,
    "source": "https://github.com/JoppieToppie/gof2r-mods/releases/download/sources/frontier_systems-source.zip"
   },
   {
@@ -80,8 +80,8 @@
    "thumb": "https://github.com/JoppieToppie/gof2r-mods/releases/download/pirate_bounty-v1.0/pirate_bounty-thumb.jpg",
    "published": "2026-11-19",
    "updated": "2026-11-19",
-   "views": 0,
-   "downloads": 0,
+   "views": 2,
+   "downloads": 2,
    "source": "https://github.com/JoppieToppie/gof2r-mods/releases/download/sources/pirate_bounty-source.zip"
   },
   {
@@ -107,8 +107,8 @@
    "thumb": "https://github.com/JoppieToppie/gof2r-mods/releases/download/plasma_arsenal-v1.0/plasma_arsenal-thumb.jpg",
    "published": "2026-11-19",
    "updated": "2026-11-19",
-   "views": 0,
-   "downloads": 0,
+   "views": 1,
+   "downloads": 1,
    "source": "https://github.com/JoppieToppie/gof2r-mods/releases/download/sources/plasma_arsenal-source.zip"
   }
  ]
