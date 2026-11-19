@@ -2,14 +2,17 @@
 """gof2r-mods: the community mod catalog of the Galaxy on Fire 2 remake.
 
 The game's Mod Browser (Online tab) reads catalog.json from this repository. A mod is submitted as one small file,
-submissions/<mod id>.json, naming a direct download link of the mod's .zip and its GitHub owner. On merge, the publish
+submissions/<mod id>.json, naming its GitHub owner and either a direct download link of the mod's .zip ("download": an
+update is a pull request changing the link) or the author's own GitHub repository ("github": every new release there with
+the mod's zip is picked up by the hourly publish, no pull request needed). On merge, the publish
 workflow downloads the zip, checks it, and attaches it to a release of this repository together with a preview and a
 thumbnail; the game downloads only from those releases. The release assets' download counts are the catalog's numbers:
 <id>.zip = downloads, <id>-preview.jpg = views (the game loads that image when a player opens the mod's page).
 
   python tools/catalog.py check --author LOGIN --base REF FILE...   a pull request: who may change what, every changed
                                                                       submission downloaded and checked (no writes)
-  python tools/catalog.py publish                                    every new or changed submission released, catalog.json
+  python tools/catalog.py publish                                    every new or changed submission (or a followed
+                                                                      repository's new release) released, catalog.json
                                                                       written (needs GITHUB_TOKEN with contents: write)
   python tools/catalog.py stats                                      views / downloads summed from the releases
   python tools/catalog.py inspect FILE.zip                           check a mod zip locally, as the workflows do
@@ -49,7 +52,9 @@ LOGIN_RE = re.compile(r"^[A-Za-z0-9](?:[A-Za-z0-9-]{0,38})$")
 BLOCKED = {".exe", ".dll", ".so", ".dylib", ".bat", ".cmd", ".com", ".ps1", ".psm1", ".vbs", ".vbe", ".js", ".jse",
            ".wsf", ".wsh", ".msi", ".msp", ".scr", ".jar", ".apk", ".aab", ".ipa", ".sh", ".bash", ".command", ".lnk",
            ".reg", ".hta", ".cpl", ".py", ".pyw", ".app", ".deb", ".rpm", ".appimage", ".pif", ".gadget", ".msc"}
-SUBMISSION_KEYS = {"download", "owner", "notes"}
+SUBMISSION_KEYS = {"download", "github", "asset", "owner", "notes"}
+REPO_RE = re.compile(r"^[A-Za-z0-9](?:[A-Za-z0-9-]{0,38})/[A-Za-z0-9._-]{1,100}$")
+ASSET_RE = re.compile(r"^[^/\\]{1,200}\.zip$", re.IGNORECASE)
 
 
 class ModError(Exception):
@@ -245,7 +250,8 @@ def images(preview_bytes, title):
 # ---------------------------------------------------------------------------------------------------- submissions
 
 def read_submission(path):
-    """submissions/<id>.json: { "download": "https://... .zip", "owner": "<GitHub login>", "notes": "..." }."""
+    """submissions/<id>.json: { "download": "https://... .zip" or "github": "<user>/<repo>" (+ "asset": "<name>.zip"),
+    "owner": "<GitHub login>", "notes": "..." }."""
     mod_id = os.path.splitext(os.path.basename(path))[0]
     if not ID_RE.match(mod_id):
         raise ModError(f"{os.path.basename(path)}: the file name must be the mod's id (a-z, 0-9, _ and -)")
@@ -263,12 +269,45 @@ def parse_submission(mod_id, s):
     extra = set(s) - SUBMISSION_KEYS
     if extra:
         raise ModError("unknown fields: " + ", ".join(sorted(extra)))
-    url, owner = s.get("download"), s.get("owner")
-    if not isinstance(url, str) or not url.startswith("https://"):
-        raise ModError("\"download\" must be an https:// link to the mod's .zip")
+    url, repo, asset, owner = s.get("download"), s.get("github"), s.get("asset"), s.get("owner")
     if not isinstance(owner, str) or not LOGIN_RE.match(owner):
         raise ModError("\"owner\" must be your GitHub user name")
-    return {"id": mod_id, "download": url.strip(), "owner": owner}
+    if (url is None) == (repo is None):
+        raise ModError("give either \"download\" (a link to the zip) or \"github\" (\"user/repository\", its releases)")
+    if url is not None and (not isinstance(url, str) or not url.startswith("https://")):
+        raise ModError("\"download\" must be an https:// link to the mod's .zip")
+    if repo is not None and (not isinstance(repo, str) or not REPO_RE.match(repo)):
+        raise ModError("\"github\" must be \"user/repository\"")
+    if asset is not None and (repo is None or not isinstance(asset, str) or not ASSET_RE.match(asset)):
+        raise ModError("\"asset\" names the .zip in a \"github\" repository's releases")
+    return {"id": mod_id, "download": url.strip() if url else None, "github": repo, "asset": asset, "owner": owner}
+
+
+def source_url(sub):
+    """Where the submission's zip is now: its "download" link, or the zip of the newest release of its "github"
+    repository (the asset named "asset", else <id>.zip, else the release's only .zip)."""
+    if sub["download"]:
+        return sub["download"]
+    try:
+        rel, _ = api("GET", f"repos/{sub['github']}/releases/latest")
+    except urllib.error.HTTPError as e:
+        raise ModError(f"{sub['github']} has no release yet (or isn't public): {e.code}")
+    zips = [a for a in rel.get("assets", []) if a["name"].lower().endswith(".zip")]
+    want = (sub["asset"] or f"{sub['id']}.zip").lower()
+    pick = [a for a in zips if a["name"].lower() == want] or (zips if len(zips) == 1 and not sub["asset"] else [])
+    if not pick:
+        raise ModError(f"the newest release of {sub['github']} ({rel.get('tag_name')}) has no {sub['asset'] or sub['id'] + '.zip'}"
+                       + ("" if sub["asset"] else " (nor a single .zip)"))
+    return pick[0]["browser_download_url"]
+
+
+def repo_owner_ok(sub, author):
+    """A followed repository is the owner's own (a maintainer may set up another, an organisation's)."""
+    if not sub["github"] or (author or "").lower() in MAINTAINERS:
+        return None
+    if sub["github"].split("/")[0].lower() != sub["owner"].lower():
+        return f"\"github\" must be a repository of yours ({sub['owner']}/...); ask a maintainer for an organisation's"
+    return None
 
 
 def may_change(author, old_owner, new_owner):
@@ -365,7 +404,7 @@ def asset_url(tag, name):
     return f"https://github.com/{REPO}/releases/download/{tag}/{name}"
 
 
-def entry_of(info, sub, sha, size, tag, old):
+def entry_of(info, sub, url, sha, size, tag, old):
     today = datetime.date.today().isoformat()
     return {
         "id": info["id"],
@@ -389,7 +428,8 @@ def entry_of(info, sub, sha, size, tag, old):
         "updated": today,
         "views": (old or {}).get("views", 0),
         "downloads": (old or {}).get("downloads", 0),
-        "source": sub["download"],
+        "source": url,
+        "follows": sub["github"],
     }
 
 
@@ -397,14 +437,16 @@ def entry_of(info, sub, sha, size, tag, old):
 
 def api(method, url, data=None, content_type="application/json"):
     token = os.environ.get("GITHUB_TOKEN") or os.environ.get("GH_TOKEN")
-    if not token:
+    if not token and method != "GET":
         raise SystemExit("GITHUB_TOKEN is needed")
     if not url.startswith("https://"):
         url = "https://api.github.com/" + url.lstrip("/")
     body = json.dumps(data).encode() if isinstance(data, (dict, list)) else data
-    req = urllib.request.Request(url, data=body, method=method, headers={
-        "Authorization": f"Bearer {token}", "Accept": "application/vnd.github+json",
-        "X-GitHub-Api-Version": "2022-11-28", "User-Agent": "gof2r-mods-catalog", "Content-Type": content_type})
+    headers = {"Accept": "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28",
+               "User-Agent": "gof2r-mods-catalog", "Content-Type": content_type}
+    if token:
+        headers["Authorization"] = f"Bearer {token}"
+    req = urllib.request.Request(url, data=body, method=method, headers=headers)
     with urllib.request.urlopen(req, timeout=300) as r:
         text = r.read()
         link = r.headers.get("Link") or ""
@@ -494,12 +536,13 @@ def cmd_check(args):
                 lines.append(f"- ✅ `{mod_id}`: removed from the catalog on merge (its releases stay)")
                 continue
             sub = read_submission(full)
-            why = may_change(args.author, old_owner, sub["owner"])
+            why = may_change(args.author, old_owner, sub["owner"]) or repo_owner_ok(sub, args.author)
             if why:
                 raise ModError(why)
+            url = source_url(sub)
             with tempfile.TemporaryDirectory() as tmp:
                 zp = os.path.join(tmp, "mod.zip")
-                sha = download(sub["download"], zp)
+                sha = download(url, zp)
                 size = os.path.getsize(zp)
                 info = inspect_zip(zp)
             if info["id"] != mod_id:
@@ -509,7 +552,8 @@ def cmd_check(args):
                 raise ModError(why)
             missing = [d.split(">=")[0].strip() for d in info["dependencies"] if not find(cat, d.split(">=")[0].strip())]
             note = f" · needs {', '.join(missing)}, not in the catalog" if missing else ""
-            lines.append(f"- ✅ `{mod_id}` {info['version']}: {english(info['name'])} by {info['author'] or sub['owner']}, "
+            follows = f" · follows {sub['github']}'s releases" if sub["github"] else ""
+            lines.append(f"- ✅ `{mod_id}` {info['version']}{follows}: {english(info['name'])} by {info['author'] or sub['owner']}, "
                          f"{info['files']} files, {size / 1024 ** 2:.1f} MB, "
                          f"{'Lua scripts' if info['scripts'] else 'no scripts'}"
                          f"{'' if info['preview'] else ', no preview image (a card with its name is made)'}{note}")
@@ -541,14 +585,23 @@ def cmd_publish(args):
             cat["mods"].remove(entry)
             changed = True
             lines.append(f"- `{entry['id']}` removed")
+    rejected = cat.setdefault("rejected", {})
+    for k in list(rejected):
+        if k not in subs:
+            del rejected[k]
+            changed = True
     for mod_id, sub in subs.items():
         old = find(cat, mod_id)
-        if old and old.get("source") == sub["download"] and old.get("owner") == sub["owner"] and not args.force:
-            continue
+        url = None
         try:
+            url = source_url(sub)
+            if old and old.get("source") == url and old.get("owner") == sub["owner"] and not args.force:
+                continue
+            if rejected.get(mod_id, {}).get("source") == url and not args.force:
+                continue   # refused before: told once, not every hour
             with tempfile.TemporaryDirectory() as tmp:
                 zp = os.path.join(tmp, "mod.zip")
-                sha = download(sub["download"], zp)
+                sha = download(url, zp)
                 info = inspect_zip(zp)
                 if info["id"] != mod_id:
                     raise ModError(f"the zip's mod.json says id \"{info['id']}\"")
@@ -556,7 +609,7 @@ def cmd_publish(args):
                 if why:
                     raise ModError(why)
                 if old and old["sha256"] == sha:   # the same files from a new link
-                    old["source"], old["owner"] = sub["download"], sub["owner"]
+                    old["source"], old["owner"] = url, sub["owner"]
                     changed = True
                     lines.append(f"- `{mod_id}`: same files, link updated")
                     continue
@@ -570,15 +623,19 @@ def cmd_publish(args):
                     release(tag, title, notes, [(f"{mod_id}.zip", zp, "application/zip"),
                                                 (f"{mod_id}-preview.jpg", preview, "image/jpeg"),
                                                 (f"{mod_id}-thumb.jpg", thumb, "image/jpeg")])
-                entry = entry_of(info, sub, sha, size, tag, old)
+                entry = entry_of(info, sub, url, sha, size, tag, old)
                 if old:
                     cat["mods"].remove(old)
                 cat["mods"].append(entry)
+                rejected.pop(mod_id, None)
                 changed = True
                 lines.append(f"- ✅ `{mod_id}` {info['version']} published")
-        except (ModError, urllib.error.HTTPError) as e:
+        except (ModError, urllib.error.HTTPError, urllib.error.URLError) as e:
             lines.append(f"- ❌ `{mod_id}`: {e}")
             failed = True
+            if url and sub["github"]:   # a followed repository's release: kept, so the hourly run skips it
+                rejected[mod_id] = {"source": url, "why": str(e)}
+                changed = True
     if changed:
         save_catalog(cat)
     elif len(lines) == 2:

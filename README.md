@@ -20,11 +20,22 @@ allow when you turn the mod on; only allow scripts from authors you trust.
    - a release of your own GitHub repository (the asset's link), best;
    - Dropbox: the share link with `?dl=1` at the end;
    - any other https link that downloads the file. MediaFire, Mega and Google Drive pages don't work.
-3. Open a pull request here that adds one file, `submissions/<your mod's id>.json` (the `id` in your `mod.json`):
+3. Open a pull request here that adds one file, `submissions/<your mod's id>.json` (the `id` in your `mod.json`).
+   Either a direct link to the zip:
 
    ```json
    {
-     "download": "https://github.com/you/your-mod/releases/download/v1.0/your_mod.zip",
+     "download": "https://www.dropbox.com/scl/fi/.../your_mod.zip?dl=1",
+     "owner": "your-github-name"
+   }
+   ```
+
+   or, best, your own GitHub repository, whose newest release carries the zip (named `<id>.zip`, or the release's only
+   .zip, or the name you give as `"asset"`):
+
+   ```json
+   {
+     "github": "your-github-name/your-mod",
      "owner": "your-github-name"
    }
    ```
@@ -33,9 +44,18 @@ allow when you turn the mod on; only allow scripts from authors you trust.
 4. The **Check submission** check downloads your zip and checks it as the game reads it. Once a maintainer merges the
    pull request, the mod is copied into a release of this repository and shows in the game within a few minutes.
 
-**Updating:** raise `version` in your `mod.json`, upload the new zip and change `download` in your submission file by
-pull request. Only the `owner` (and the maintainers) can change a mod's submission. Removing your submission file
-takes the mod out of the catalog.
+## Updating your mod
+
+Raise `version` in your `mod.json` (a higher number than the catalog's: `1.1` after `1.0`, `1.10` after `1.9`), then:
+
+- **Following your repository (`"github"`):** publish a new release there with the new zip. Within the hour the catalog
+  picks it up, and players see *Update to v1.1* in the game. No pull request needed.
+- **A `"download"` link:** upload the new zip and change `download` in your submission file by pull request.
+
+A zip with the same version as the published one but other files is refused (raise the version); a refused release of
+a followed repository is listed under `"rejected"` in `catalog.json` with the reason, and tried again when you publish
+another. Only the `owner` (and the maintainers) can change a mod's submission. Removing your submission file takes the
+mod out of the catalog.
 
 **Rules:** your own work, or work you have permission to share (name it in `mod.json`'s `credits`); nothing that runs on
 its own (`.exe`, `.dll`, shell scripts and the like are refused: mods are data, models, textures, sounds and Lua scripts);
@@ -45,12 +65,12 @@ at most 1 GB. The maintainers may remove any mod.
 
 | File | What it is |
 | --- | --- |
-| `submissions/<id>.json` | One per mod: its download link and owner. The only files a pull request may change. |
+| `submissions/<id>.json` | One per mod: its download link or followed repository, and owner. The only files a pull request may change. |
 | `catalog.json` | What the game reads, written by the workflows only. |
 | `tools/catalog.py` | The checker and publisher (`python tools/catalog.py inspect my_mod.zip` checks a zip like the workflow does). |
 
 - **Check submission** (pull requests): who may change what, each changed submission's zip downloaded and checked.
-- **Publish** (a submission merged): the zip checked again and released here as `<id>-v<version>` with `<id>.zip`,
+- **Publish** (a submission merged, and hourly for the repositories submissions follow): the zip checked again and released here as `<id>-v<version>` with `<id>.zip`,
   `<id>-preview.jpg` and `<id>-thumb.jpg`; `catalog.json` updated. The game only downloads from these releases and
   checks each download's SHA-256 against the catalog.
 - **Stats** (every three hours): views and downloads from the release assets' download counts: `<id>.zip` fetched =

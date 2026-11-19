@@ -115,6 +115,40 @@ class RuleTests(unittest.TestCase):
             with self.assertRaises(catalog.ModError):
                 catalog.parse_submission("x", bad)
 
+    def test_a_submission_can_follow_a_repository(self):
+        s = catalog.parse_submission("x", {"github": "ann/x-mod", "owner": "ann"})
+        self.assertEqual("ann/x-mod", s["github"])
+        self.assertIsNone(s["download"])
+        self.assertIsNone(catalog.repo_owner_ok(s, "ann"))
+        other = catalog.parse_submission("x", {"github": "bob/x-mod", "owner": "ann"})
+        self.assertIsNotNone(catalog.repo_owner_ok(other, "ann"), "someone else's repository")
+        self.assertIsNone(catalog.repo_owner_ok(other, "JoppieToppie"), "a maintainer sets up an organisation's")
+        for bad in [{"github": "ann/x", "download": "https://e.com/x.zip", "owner": "ann"},
+                    {"github": "not a repo", "owner": "ann"},
+                    {"download": "https://e.com/x.zip", "asset": "x.zip", "owner": "ann"},
+                    {"github": "ann/x", "asset": "x.rar", "owner": "ann"}]:
+            with self.assertRaises(catalog.ModError):
+                catalog.parse_submission("x", bad)
+
+    def test_a_followed_repository_gives_its_newest_zip(self):
+        def fake(assets):
+            return lambda method, url, data=None, content_type=None: (
+                {"tag_name": "v2", "assets": [{"name": n, "browser_download_url": "https://dl/" + n} for n in assets]}, None)
+        real = catalog.api
+        try:
+            sub = catalog.parse_submission("x", {"github": "ann/x", "owner": "ann"})
+            catalog.api = fake(["notes.txt", "x.zip", "other.zip"])
+            self.assertEqual("https://dl/x.zip", catalog.source_url(sub), "the one named <id>.zip")
+            catalog.api = fake(["build-2.zip"])
+            self.assertEqual("https://dl/build-2.zip", catalog.source_url(sub), "the release's only zip")
+            catalog.api = fake(["a.zip", "b.zip"])
+            with self.assertRaises(catalog.ModError):
+                catalog.source_url(sub)
+            named = catalog.parse_submission("x", {"github": "ann/x", "asset": "b.zip", "owner": "ann"})
+            self.assertEqual("https://dl/b.zip", catalog.source_url(named))
+        finally:
+            catalog.api = real
+
     def test_tags_and_links(self):
         self.assertEqual("my-mod-v1.2_beta", catalog.tag_of("my-mod", "1.2 beta"))
         self.assertTrue(catalog.asset_url("t", "x.zip").endswith("/releases/download/t/x.zip"))

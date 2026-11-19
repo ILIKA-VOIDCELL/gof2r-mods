@@ -1,11 +1,14 @@
 # A merged submission: its zip downloaded and checked again, released with a preview and a thumbnail, and catalog.json
-# written (removed submissions leave the catalog; their releases stay).
+# written (removed submissions leave the catalog; their releases stay). Hourly: the newest release of every repository a
+# submission follows ("github"), so an author's new release reaches the game without a pull request.
 name: Publish
 
 on:
   push:
     branches: [main]
     paths: ["submissions/**"]
+  schedule:
+    - cron: "41 * * * *"
   workflow_dispatch:
     inputs:
       force:

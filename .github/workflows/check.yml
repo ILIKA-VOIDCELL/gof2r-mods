@@ -33,3 +33,4 @@ jobs:
         env:
           AUTHOR: ${{ github.event.pull_request.user.login }}
           BASE: ${{ github.base_ref }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
