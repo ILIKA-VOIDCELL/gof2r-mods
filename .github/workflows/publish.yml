@@ -1,0 +1,46 @@
+# A merged submission: its zip downloaded and checked again, released with a preview and a thumbnail, and catalog.json
+# written (removed submissions leave the catalog; their releases stay).
+name: Publish
+
+on:
+  push:
+    branches: [main]
+    paths: ["submissions/**"]
+  workflow_dispatch:
+    inputs:
+      force:
+        description: Download every submission again
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: catalog
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install pillow==11.0.0
+      - name: Publish
+        run: python tools/catalog.py publish ${{ inputs.force && '--force' || '' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Commit catalog.json
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add catalog.json
+          if ! git diff --cached --quiet; then
+            git commit -m "catalog: publish"
+            git pull --rebase
+            git push
+          fi

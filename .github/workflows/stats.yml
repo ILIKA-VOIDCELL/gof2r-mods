@@ -1,0 +1,38 @@
+# Every three hours: each mod's views and downloads in catalog.json, from its release assets' download counts
+# (<id>-preview.jpg = views: the game loads it when a player opens the mod's page; <id>.zip = downloads).
+name: Stats
+
+on:
+  schedule:
+    - cron: "17 */3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: catalog
+  cancel-in-progress: false
+
+jobs:
+  stats:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Count
+        run: python tools/catalog.py stats
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Commit catalog.json
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add catalog.json
+          if ! git diff --cached --quiet; then
+            git commit -m "catalog: views and downloads"
+            git pull --rebase
+            git push
+          fi
