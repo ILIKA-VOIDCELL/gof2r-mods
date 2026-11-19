@@ -1,6 +1,6 @@
 {
  "format": 1,
- "updated": "2026-11-19T05:12:52Z",
+ "updated": "2026-11-19T05:28:48Z",
  "repository": "JoppieToppie/gof2r-mods",
  "mods": [
   {
@@ -58,6 +58,31 @@
    "source": "https://github.com/JoppieToppie/gof2r-mods/releases/download/sources/frontier_systems-source.zip"
   },
   {
+   "id": "mass_effect_ships",
+   "name": "SR-2 Normandy",
+   "version": "1.1",
+   "author": "Joppie",
+   "owner": "JoppieToppie",
+   "description": "Adds the SR-2 Normandy from Mass Effect 2 as a late-game Terran stealth frigate, its cloak built into the hull. Terran ship dealers at tech level 9 and up sometimes stock it, and late in the story (in free play from rank 12) a visitor in Terran Space Lounges may offer it.",
+   "credits": "SR-2 Normandy model and textures: Mass Effect 2, Electronic Arts / BioWare.",
+   "website": null,
+   "dependencies": [],
+   "scripts": false,
+   "files": 18,
+   "size": 6393799,
+   "sha256": "7fd7179454f35ef1d0a98f7532d234d8ffec7c2382977912aa6308101ad761f9",
+   "tag": "mass_effect_ships-v1.1",
+   "download": "https://github.com/JoppieToppie/gof2r-mods/releases/download/mass_effect_ships-v1.1/mass_effect_ships.zip",
+   "preview": "https://github.com/JoppieToppie/gof2r-mods/releases/download/mass_effect_ships-v1.1/mass_effect_ships-preview.jpg",
+   "thumb": "https://github.com/JoppieToppie/gof2r-mods/releases/download/mass_effect_ships-v1.1/mass_effect_ships-thumb.jpg",
+   "published": "2026-11-19",
+   "updated": "2026-11-19",
+   "views": 0,
+   "downloads": 0,
+   "source": "https://github.com/JoppieToppie/gof2r-mods/releases/download/sources/mass_effect_ships-source.zip",
+   "follows": null
+  },
+  {
    "id": "pirate_bounty",
    "name": "Pirate Bounty (script example)",
    "version": "1.0",
@@ -111,5 +136,6 @@
    "downloads": 1,
    "source": "https://github.com/JoppieToppie/gof2r-mods/releases/download/sources/plasma_arsenal-source.zip"
   }
- ]
+ ],
+ "rejected": {}
 }
