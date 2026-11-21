@@ -1,6 +1,6 @@
 {
  "format": 1,
- "updated": "2026-11-21T02:35:55Z",
+ "updated": "2026-11-21T02:36:48Z",
  "repository": "JoppieToppie/gof2r-mods",
  "mods": [
   {
@@ -87,7 +87,7 @@
   {
    "id": "frontier_systems",
    "name": "Frontier: Kepler",
-   "version": "1.0",
+   "version": "1.1",
    "author": "JoppieToppie",
    "owner": "JoppieToppie",
    "description": {
@@ -99,17 +99,18 @@
    "dependencies": [],
    "scripts": false,
    "files": 14,
-   "size": 1229887,
-   "sha256": "fb05ffa62cfea346c8f1de58e9134a6603ce827b0b1daca3e23fb977bbbfc8d4",
-   "tag": "frontier_systems-v1.0",
-   "download": "https://github.com/JoppieToppie/gof2r-mods/releases/download/frontier_systems-v1.0/frontier_systems.zip",
-   "preview": "https://github.com/JoppieToppie/gof2r-mods/releases/download/frontier_systems-v1.0/frontier_systems-preview.jpg",
-   "thumb": "https://github.com/JoppieToppie/gof2r-mods/releases/download/frontier_systems-v1.0/frontier_systems-thumb.jpg",
+   "size": 1231805,
+   "sha256": "89337b3b160435b9c0240220b6a6b2669d6fb0f1863c9b1f4909f31ffc145927",
+   "tag": "frontier_systems-v1.1",
+   "download": "https://github.com/JoppieToppie/gof2r-mods/releases/download/frontier_systems-v1.1/frontier_systems.zip",
+   "preview": "https://github.com/JoppieToppie/gof2r-mods/releases/download/frontier_systems-v1.1/frontier_systems-preview.jpg",
+   "thumb": "https://github.com/JoppieToppie/gof2r-mods/releases/download/frontier_systems-v1.1/frontier_systems-thumb.jpg",
    "published": "2026-11-19",
-   "updated": "2026-11-19",
+   "updated": "2026-11-21",
    "views": 2,
    "downloads": 2,
-   "source": "https://github.com/JoppieToppie/gof2r-mods/releases/download/sources/frontier_systems-source.zip"
+   "source": "https://github.com/JoppieToppie/gof2r-mods/releases/download/sources/frontier_systems-source.zip",
+   "follows": null
   },
   {
    "id": "heavy_ammo",
@@ -357,7 +358,7 @@
   {
    "id": "plasma_arsenal",
    "name": "Plasma Arsenal",
-   "version": "1.0",
+   "version": "1.1",
    "author": "JoppieToppie",
    "owner": "JoppieToppie",
    "description": {
@@ -369,17 +370,18 @@
    "dependencies": [],
    "scripts": false,
    "files": 8,
-   "size": 165724,
-   "sha256": "7c1fd514f0f9de79b981d5e41ba216a11f21beb0f5129d55bc0ae0f5283ade2d",
-   "tag": "plasma_arsenal-v1.0",
-   "download": "https://github.com/JoppieToppie/gof2r-mods/releases/download/plasma_arsenal-v1.0/plasma_arsenal.zip",
-   "preview": "https://github.com/JoppieToppie/gof2r-mods/releases/download/plasma_arsenal-v1.0/plasma_arsenal-preview.jpg",
-   "thumb": "https://github.com/JoppieToppie/gof2r-mods/releases/download/plasma_arsenal-v1.0/plasma_arsenal-thumb.jpg",
+   "size": 166446,
+   "sha256": "1713125bba2e88de65013bc0820288bc9c6ac17dddd056b5e4443c8f2d30fc3f",
+   "tag": "plasma_arsenal-v1.1",
+   "download": "https://github.com/JoppieToppie/gof2r-mods/releases/download/plasma_arsenal-v1.1/plasma_arsenal.zip",
+   "preview": "https://github.com/JoppieToppie/gof2r-mods/releases/download/plasma_arsenal-v1.1/plasma_arsenal-preview.jpg",
+   "thumb": "https://github.com/JoppieToppie/gof2r-mods/releases/download/plasma_arsenal-v1.1/plasma_arsenal-thumb.jpg",
    "published": "2026-11-19",
-   "updated": "2026-11-19",
+   "updated": "2026-11-21",
    "views": 3,
    "downloads": 4,
-   "source": "https://github.com/JoppieToppie/gof2r-mods/releases/download/sources/plasma_arsenal-source.zip"
+   "source": "https://github.com/JoppieToppie/gof2r-mods/releases/download/sources/plasma_arsenal-source.zip",
+   "follows": null
   },
   {
    "id": "scavenger",
